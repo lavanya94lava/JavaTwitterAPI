@@ -84,6 +84,18 @@ public class tweetController {
         return message.getText();
     }
 
+    @RequestMapping(value = "/replyToATweet", method = RequestMethod.POST)
+    public String replyToTweet(@RequestBody JSONObject jsonBody) throws TwitterException{
+
+        Twitter twitter = instanceTwitter.getTwitter();
+        String replyMessage = (String)jsonBody.get("replyMessage");
+        Long tweetId = (Long)jsonBody.get("tweetId");//tweetId to which user would reply
+        StatusUpdate statusUpdate = new StatusUpdate(replyMessage);
+        statusUpdate.setInReplyToStatusId(tweetId);
+        Status status = twitter.updateStatus(statusUpdate);
+        return status.getText();
+    }
+
 
 
 }

@@ -39,6 +39,9 @@ Search for Hashtags trending in a particular region of the world using WOEID(Whe
 <br>
 Send a direct message to any user using their username, and using twitter.sendDirectMessage method.
 <br>
+Reply to a Tweet using Status Update Method, this method would the tweet Id of the parent tweet.<br>
+<br>
+
 
 
 
