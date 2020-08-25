@@ -2,9 +2,9 @@ package com.example.controllers;
 
 import com.example.services.instanceTwitter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.json.simple.JSONObject;
+import org.springframework.web.bind.annotation.RequestMethod;
 import twitter4j.*;
 
 import java.util.List;
@@ -17,9 +17,9 @@ public class tweetController {
     instanceTwitter instanceTwitter;
 
     @RequestMapping(value = "/getTweets")
-    public List<String> getUserTimeline() throws TwitterException{
+    public List<String> getUserTimeline(@RequestParam("searchString") String searchString) throws TwitterException{
         Twitter twitter = instanceTwitter.getTwitter();
-        List<Status> statuses = twitter.getUserTimeline("kunalkamra88");
+        List<Status> statuses = twitter.getUserTimeline(searchString);
         return statuses.stream().map(
                 item -> item.getText()).collect(
                 Collectors.toList());
@@ -35,6 +35,36 @@ public class tweetController {
         return result.getTweets().stream()
                 .map(item -> item.getText())
                 .collect(Collectors.toList());
+    }
+
+    @RequestMapping(value = "/postTweet", method = RequestMethod.POST)
+    public String createTweet(@RequestBody JSONObject jsonBody) throws TwitterException{
+        Twitter twitter = instanceTwitter.getTwitter();
+        String tweet = (String)jsonBody.get("tweet");
+        System.out.println("tweeeet "+ tweet);
+        Status status = twitter.updateStatus(tweet);
+        return status.getText();
+    }
+
+
+    @RequestMapping(value = "/getTrendsAtPlace", method = RequestMethod.GET)
+    private String[] getTrendLink(@RequestParam("searchID") int searchID) {
+        Twitter tw = TwitterFactory.getSingleton();
+        String[] retarr = new String[0];
+        final int woeid = searchID;  // Where On Earth ID of JAPAN
+
+        try {
+            Trend[] arr = tw.getPlaceTrends(woeid).getTrends();
+
+            retarr = new String[arr.length];
+            for (int i=0; i<arr.length; i++) {
+                retarr[i] =  arr[i].getURL() + " " + arr[i].getName() ;
+            }
+        } catch (TwitterException exc) {
+            System.out.println("TwitterException: " + exc);  // LOG
+        }
+
+        return retarr;
     }
 
 
