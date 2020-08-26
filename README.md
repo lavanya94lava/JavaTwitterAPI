@@ -29,7 +29,7 @@ json-simple
 
 Fetch the user TimeLine using twitter.getUserTimeLine method, it gives you how the current timeline of user looks like.<br>
 <br>
-Fetch the tweets of a user using his/her username.<br>
+Fetch the tweets of a user using his/her username.Also use Paging method to get x number of tweets from a particular page number<br>
 <br>
 Search for the tweets of a particular keyword using a query method offered by twitter4j.<br>
 <br>

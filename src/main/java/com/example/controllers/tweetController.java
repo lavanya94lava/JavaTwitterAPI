@@ -22,7 +22,7 @@ public class tweetController {
         List<String> tweets = new ArrayList<>();
         try{
             Twitter twitter = instanceTwitter.getTwitter();
-            List<Status>statuses = twitter.getUserTimeline(searchString);
+            List<Status>statuses = twitter.getUserTimeline(searchString, new Paging(1,100));
 
             tweets = statuses.stream().map(
                     item -> item.getText()).collect(
@@ -91,7 +91,7 @@ public class tweetController {
         String replyMessage = (String)jsonBody.get("replyMessage");
         Long tweetId = (Long)jsonBody.get("tweetId");//tweetId to which user would reply
         StatusUpdate statusUpdate = new StatusUpdate(replyMessage);
-        statusUpdate.setInReplyToStatusId(tweetId);
+        statusUpdate.inReplyToStatusId(tweetId);
         Status status = twitter.updateStatus(statusUpdate);
         return status.getText();
     }
