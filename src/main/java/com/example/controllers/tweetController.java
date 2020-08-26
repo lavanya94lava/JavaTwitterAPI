@@ -1,10 +1,10 @@
 package com.example.controllers;
 
 import com.example.services.instanceTwitter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import twitter4j.*;
 
 import java.util.ArrayList;
@@ -85,15 +85,15 @@ public class tweetController {
     }
 
     @RequestMapping(value = "/replyToATweet", method = RequestMethod.POST)
-    public String replyToTweet(@RequestBody JSONObject jsonBody) throws TwitterException{
+    public void replyToTweet(@RequestBody JSONObject jsonBody) throws TwitterException{
 
         Twitter twitter = instanceTwitter.getTwitter();
         String replyMessage = (String)jsonBody.get("replyMessage");
         Long tweetId = (Long)jsonBody.get("tweetId");//tweetId to which user would reply
-        StatusUpdate statusUpdate = new StatusUpdate(replyMessage);
-        statusUpdate.inReplyToStatusId(tweetId);
-        Status status = twitter.updateStatus(statusUpdate);
-        return status.getText();
+        Status status = twitter.showStatus(Long.parseLong(String.valueOf(tweetId)));
+        System.out.println(status.getUser().getScreenName());
+        Status reply = twitter.updateStatus(new StatusUpdate(" @" + status.getUser().getScreenName() + " "+ replyMessage).inReplyToStatusId(status.getId()));
+        System.out.println(reply);
     }
 
 
